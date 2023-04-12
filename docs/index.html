@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+  body {
+    padding: 100px;
+    width: 1000px;
+    margin: auto;
+    text-align: left;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    color: #121212;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+</style>
+<title>CS 184 Project 4</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+</head>
+
+
+<body>
+
+<h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2023</h1>
+<h1 align="middle">Project 4: Cloth Sim</h1>
+<h2 align="middle">Rajen Dey, Eshaan Moorjani</h2>
+<h2 align="middle" href="http://rajendey.github.io/cs184-proj4">http://rajendey.github.io/cs184-proj4</h2>
+
+<br><br>
+
+<div>
+
+<h2 align="middle">Overview</h2>
+<p>
+  In part 1, we implemented BSDFs to represent reflection and refraction. We didn’t run into many issues in this part, as we just used the appropriate equations from the docs and the slides. One tricky part was calculating Schlick’s approximation, and we ran into an issue because we were using eta = ior1/ior2 instead of ior2/ior1 when trying to calculate R. In part 2, we implemented a thin lens. We didn’t run into any issues in this part, as we just followed the pseudocode in the docs. 
+</p>
+
+<h2 align="middle">Part 1: Masses and springs</h2>
+
+<br>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/1-1.png" align="middle" width="800px"/>
+        <figcaption>(1): Wireframe without any shearing constraints</figcaption><br><br><br>
+        <img src="images/1-2.png" align="middle" width="800px"/>
+        <figcaption>(2): Wireframe with only shearing constraints</figcaption><br><br><br>
+        <img src="images/1-3.png" align="middle" width="800px"/>
+        <figcaption>(3): Wireframe with all constraints</figcaption><br><br><br>
+        <img src="images/1-0.png" align="middle" width="800px"/>
+        <figcaption>Checkout our wireframe from a cool angle</figcaption><br><br><br>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <br>
+    <tr>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+<h2 align="middle">Part 2: Simulation via numerical integration </h2>
+<br><br>
+<p>
+  With a low ks (10), the cloth is smoother and does not fold/wrinkle as much. With a high ks (10000), the cloth gets very foldy/wrinkly and changes a lot from timestep to timestep. When the ks gets too high, the cloth just explodes and disappears. With low density (8), the cloth also gets very foldy/wrinkly and also changes a lot from timestep to timestep. With high density (10000), the cloth is smoother and does not fold/wrinkle as much and also falls all the way down. When the density is too low, the cloth also explodes and disappears. When damping is really high (1%), the cloth becomes really slow and also pretty wrinkly. When damping is really low, the cloth moves faster, and when damping is at 0%, the cloth swings freely, even past vertical.
+</p>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/2-1.png" align="middle" width="800px"/>
+        <figcaption>Low ks</figcaption><br><br><br>
+        <img src="images/2-2.png" align="middle" width="800px"/>
+        <figcaption>High ks</figcaption><br><br><br>
+        <img src="images/2-3.png" align="middle" width="800px"/>
+        <figcaption>Low density</figcaption><br><br><br>
+        <img src="images/2-4.png" align="middle" width="800px"/>
+        <figcaption>High density</figcaption><br><br><br>
+        <img src="images/2-5.png" align="middle" width="800px"/>
+        <figcaption>Low damping</figcaption><br><br><br>
+        <img src="images/2-6.png" align="middle" width="800px"/>
+        <figcaption>High damping</figcaption><br><br><br>
+        <img src="images/2-7.png" align="middle" width="800px"/>
+        <figcaption>Final state pinned4.json</figcaption><br><br><br>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <br>
+    <tr>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<h2 align="middle">Part 3: Handling collisions with other objects </h2>
+<br><br>
+<p>
+  For the smaller ks = 500, the cloth encapsulates the upper third of the sphere before beginning to wrinkle. As the cloth drapes over the sphere, the sides dangle quite vertically. For ks = 5000, the cloth slightly covers the top of the sphere but quickly wrinkles. Similarly with ks=5000, the end of the cloth dangles quite vertically, but not as much as ks=500. Lastly, with ks=50000, wrinkles immediately show up as the cloth covers the sphere, and the cloth does not hang diagonally off the sides. 
+
+  These finds make intuitive sense. As ks increases, the springs in the cloth get stronger, the cloth wants to stretch less, creating less wrinkles and less dangling. 
+  </p>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/3-2.png" align="middle" width="800px"/>
+        <figcaption>ks=500</figcaption><br><br><br>
+        <img src="images/3-1.png" align="middle" width="800px"/>
+        <figcaption>ks=5000</figcaption><br><br><br>
+        <img src="images/3-3.png" align="middle" width="800px"/>
+        <figcaption>ks=50000</figcaption><br><br><br>
+        <img src="images/2-4.png" align="middle" width="800px"/>
+        <figcaption>Shaded cloth lying restfully!</figcaption><br><br><br>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <br>
+    <tr>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<h2 align="middle">Part 4: Handling self-collisions </h2>
+<br><br>
+<p>
+  Images below! Right when the cloth makes impact with the plane below it, the entire cloth ends up getting waves sent through it, with the waves having a higher amplitude near the impact point. This makes some intuitive sense because at contact, the springs that cloth is made of start to be activated to deal with the incoming force and it decreases as you move up the cloth. Midway through, the cloth that has already hit the plane below it starts to fold on itself (view picture). By the end, the cloth is almost entirely on the ground folded on itself. 
+
+When you increase the density, the cloth begins to fall in smaller clumps. This also makes intuitive sense, the cloth is heavier, meaning that the springs holding the cloth together cannot stretch as far to connect. 
+
+When you increase the ks, it increases the strength of the strings. As such, you see the clumps as it falls get bigger (basically longer for the cloth to wrinkle). 
+
+When playing around, we found out that increasing the density and ks tends to counteract each other.
+
+  </p>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/4-1.png" align="middle" width="800px"/>
+        <figcaption>Early, initial self-collision</figcaption><br><br><br>
+        <img src="images/4-2.png" align="middle" width="800px"/>
+        <figcaption>Midpoint during the collision</figcaption><br><br><br>
+        <img src="images/4-3.png" align="middle" width="800px"/>
+        <figcaption>End of the collision</figcaption><br><br><br>
+        <img src="images/4-4.png" align="middle" width="800px"/>
+        <figcaption>Collision with a higher density (density = 50 g/cm^2) </figcaption><br><br><br>
+        <img src="images/4-5.png" align="middle" width="800px"/>
+        <figcaption>Collision with a higher ks value (ks = 25000 N/m)</figcaption><br><br><br>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <br>
+    <tr>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<h2 align="middle">Part 5: Shaders </h2>
+<br><br>
+<p>
+  A shader program, in this case coded in OpenGL, is code that runs on the GPU. Shaders help us take advantage of the GPU to move vertices and display colors and textures for objects in our scene with high performance (ideally real-time). Shaders can be used to apply textures, change the way light interacts, and apply material properties. 
+
+  Vertex shaders transform vertices in world space to the place it should be for the perspective of the display. Vertex shaders also output vertex normals and texture coordinates that will be used by fragment shaders. Meanwhile, fragment shaders determine the color of each pixel that will be outputted to the display. Using the information given from the vertex shader (e.g. vertex positions, normals, texture coordinates), the fragment shader determines the correct lighting and material properties to determine the correct color for a pixel on a display. These shaders work together to mimic materials and lighting in a scene. 
+  
+  The Blinn-Phong shading model combines ambient lighting, diffuse shading, and specular shading to get a final shading. It computes specular shading by using not only the light direction and normal, but also the viewing direction. 
+  
+  Displacement mapping actually changes the vertex positions, but bump mapping doesn’t and instead only changes the vertex normals. They look pretty similar on the sphere, but the changed vertex positions are clear to see on the cloth. Using displacement mapping, the cloth folded onto the sphere looks really weird, but it looks pretty good with bump mapping.  The shaders look pretty similar for the different sphere coarsenesses. One thing I noticed: the sphere’s “longitude” lines are smoother with the parameter -o 128 -a 128 a with both the displacement and bump map.
+  </p>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/5-1.png" align="middle" width="800px"/>
+        <figcaption>Only ambient</figcaption><br><br><br>
+        <img src="images/5-2.png" align="middle" width="800px"/>
+        <figcaption>Only diffuse</figcaption><br><br><br>
+        <img src="images/5-3.png" align="middle" width="800px"/>
+        <figcaption>Only specular</figcaption><br><br><br>
+        <img src="images/5-4.png" align="middle" width="800px"/>
+        <figcaption>Entire blinn phong</figcaption><br><br><br>
+        <img src="images/5-5.png" align="middle" width="800px"/>
+        <figcaption>Texture</figcaption><br><br><br>
+        <img src="images/5-6.png" align="middle" width="800px"/>
+        <figcaption>Cloth + sphere bump map</figcaption><br><br><br>
+        <img src="images/5-7.png" align="middle" width="800px"/>
+        <figcaption>Sphere displacement map</figcaption><br><br><br>
+        <img src="images/5-8.png" align="middle" width="800px"/>
+        <figcaption>Cloth folded on sphere displacement</figcaption><br><br><br>
+        <img src="images/5-9.png" align="middle" width="800px"/>
+        <figcaption>Cloth folded on sphere bump</figcaption><br><br><br>
+        <img src="images/5-10.png" align="middle" width="800px"/>
+        <figcaption>Sphere coarseness #1 displacement</figcaption><br><br><br>
+        <img src="images/5-11.png" align="middle" width="800px"/>
+        <figcaption>Sphere coarseness #1 bump</figcaption><br><br><br>
+        <img src="images/5-12.png" align="middle" width="800px"/>
+        <figcaption>Sphere coarseness #2 bump</figcaption><br><br><br>
+        <img src="images/5-13.png" align="middle" width="800px"/>
+        <figcaption>Sphere coarseness #2 displacement</figcaption><br><br><br>
+        <img src="images/5-14.png" align="middle" width="800px"/>
+        <figcaption>Cloth + sphere mirror</figcaption><br><br><br>
+        <img src="images/5-15.png" align="middle" width="800px"/>
+        <figcaption>Cloth folded on sphere mirror</figcaption><br><br><br>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <br>
+    <tr>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+</body>
+</html>
