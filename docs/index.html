@@ -34,8 +34,7 @@
 
 <h2 align="middle">Overview</h2>
 <p>
-  In part 1, we implemented BSDFs to represent reflection and refraction. We didn’t run into many issues in this part, as we just used the appropriate equations from the docs and the slides. One tricky part was calculating Schlick’s approximation, and we ran into an issue because we were using eta = ior1/ior2 instead of ior2/ior1 when trying to calculate R. In part 2, we implemented a thin lens. We didn’t run into any issues in this part, as we just followed the pseudocode in the docs. 
-</p>
+  In this project, we implemented a cloth simulation. In part 1, we created a model of the cloth using point masses and springs. In part 2, we simulated how the cloth would move using our point mass & spring model using Hooke’s law + external forces. In part 3, we simulated how the cloth would collide with other objects by computing whether each point mass intersected/was contained in other objects and moving them to be outside the object if so. In part 4, we modeled self collisions of point masses within the cloth by using a spatial hash map. In part 5, we coded up some shaders in GLSL, including diffuse, Blinn-Phong, texture maps, bump and displacement maps, and mirror environment maps. The biggest challenge we ran into was that our buildGrid function was wrong. We encountered a bunch of errors in later parts that we realized were caused by our buildGrid function, and spent a lot of time debugging because of this. We coded up part 1 while we were *not sober*, and it definitely was not a good idea because we wasted a ton of time debugging later.</p>
 
 <h2 align="middle">Part 1: Masses and springs</h2>
 
